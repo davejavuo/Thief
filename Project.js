@@ -1,0 +1,451 @@
+//---------------------------------------------BASE CODE-----------------------------------
+function World(){
+	this.scale = 50; //the size of a room
+	this.room_origin_x = 125; //starting x position of the world
+	this.room_origin_y = 0; //starting y position of the world
+	//room is the blocks of rooms that are allowed in this world. here you can just spawn rooms and edit them.
+	//   [0,0][0,1][0,2][0,3][0,4]
+	//   [1,0][1,1][1,2][1,3][1,4]
+	//   [2,0][2,1][2,2][2,3][2,4]
+	//   [3,0][3,1][3,2][3,3][3,4]
+	//   [4,0][4,1][4,2][4,3][4,4]
+	//   [5,0][5,1][5,2][5,3][5,4]
+	//   [6,0][6,1][6,2][6,3][6,4]
+	this.room = [
+					[new Tile(this.room_origin_x, this.room_origin_y),										//[0][0]
+					 new Tile(this.room_origin_x + this.scale, this.room_origin_y),							//[0][1]
+					 new Tile(this.room_origin_x + (this.scale*2), this.room_origin_y),						//[0][2]
+					 new Tile(this.room_origin_x + (this.scale*3), this.room_origin_y),						//[0][3]
+					 new Tile(this.room_origin_x + (this.scale*4), this.room_origin_y)],					//[0][4]
+					[new Tile(this.room_origin_x, this.room_origin_y + this.scale),							//[1][0]
+					 new Tile(this.room_origin_x + this.scale, this.room_origin_y + this.scale),			//[1][1]
+					 new Tile(this.room_origin_x + (this.scale*2), this.room_origin_y + this.scale),		//[1][2]
+					 new Tile(this.room_origin_x + (this.scale*3), this.room_origin_y + this.scale),		//[1][3]
+					 new Tile(this.room_origin_x + (this.scale*4), this.room_origin_y + this.scale)],		//[1][4]
+					[new Tile(this.room_origin_x, this.room_origin_y + (this.scale*2)),						//[2][0]
+					 new Tile(this.room_origin_x + this.scale, this.room_origin_y + (this.scale*2)),		//[2][1]
+					 new Tile(this.room_origin_x + (this.scale*2), this.room_origin_y + (this.scale*2)),	//[2][2]
+					 new Tile(this.room_origin_x + (this.scale*3), this.room_origin_y + (this.scale*2)),	//[2][3]
+					 new Tile(this.room_origin_x + (this.scale*4), this.room_origin_y + (this.scale*2))],	//[2][4]
+					[new Tile(this.room_origin_x, this.room_origin_y + (this.scale*3)),						//[3][0]
+					 new Tile(this.room_origin_x + this.scale, this.room_origin_y + (this.scale*3)),		//[3][1]
+					 new Tile(this.room_origin_x + (this.scale*2), this.room_origin_y + (this.scale*3)),	//[3][2]
+					 new Tile(this.room_origin_x + (this.scale*3), this.room_origin_y + (this.scale*3)),	//[3][3]
+					 new Tile(this.room_origin_x + (this.scale*4), this.room_origin_y + (this.scale*3))],	//[3][4]
+					[new Tile(this.room_origin_x, this.room_origin_y + (this.scale*4)),						//[4][0]
+					 new Tile(this.room_origin_x + this.scale, this.room_origin_y + (this.scale*4)),		//[4][1]
+					 new Tile(this.room_origin_x + (this.scale*2), this.room_origin_y + (this.scale*4)),	//[4][2]
+					 new Tile(this.room_origin_x + (this.scale*3), this.room_origin_y + (this.scale*4)),	//[4][3]
+					 new Tile(this.room_origin_x + (this.scale*4), this.room_origin_y + (this.scale*4))],	//[4][4]
+					[new Tile(this.room_origin_x, this.room_origin_y + (this.scale*5)),						//[5][0]
+					 new Tile(this.room_origin_x + this.scale, this.room_origin_y + (this.scale*5)),		//[5][1]
+					 new Tile(this.room_origin_x + (this.scale*2), this.room_origin_y + (this.scale*5)),	//[5][2]
+					 new Tile(this.room_origin_x + (this.scale*3), this.room_origin_y + (this.scale*5)),	//[5][3]
+					 new Tile(this.room_origin_x + (this.scale*4), this.room_origin_y + (this.scale*5))],	//[5][4]
+					[new Tile(this.room_origin_x, this.room_origin_y + (this.scale*6)),						//[6][0]
+					 new Tile(this.room_origin_x + this.scale, this.room_origin_y + (this.scale*6)),		//[6][1]
+					 new Tile(this.room_origin_x + (this.scale*2), this.room_origin_y + (this.scale*6)),	//[6][2]
+					 new Tile(this.room_origin_x + (this.scale*3), this.room_origin_y + (this.scale*6)),	//[6][3]
+					 new Tile(this.room_origin_x + (this.scale*4), this.room_origin_y + (this.scale*6))]	//[6][4]
+				];
+	//similar to add but automatically allows movement back
+	this.placeRoom = function(x,y,z){
+		switch(z){
+			case "top":
+				this.add(x,y,z);
+				this.add(x-1,y,"down");
+				break;
+			case "left":
+				this.add(x,y,z);
+				this.add(x,y-1,"right");
+				break;
+			case "right":
+				this.add(x,y,z);
+				this.add(x,y+1,"left");
+				break;
+			case "down":
+				this.add(x,y,z);
+				this.add(x+1,y,"top");
+				break;
+		}
+	}
+	//lets the user be able to move to a direction z from tile(x,y)
+	this.add = function(x,y,z){
+		this.room[x][y].passed = true;
+		switch(z){
+			case "top":
+				this.room[x][y].topdoor = true;
+				break;
+			case "left":
+				this.room[x][y].leftdoor = true;
+				break;
+			case "right":
+				this.room[x][y].rightdoor = true;
+				break;
+			case "down":
+				this.room[x][y].downdoor = true;
+				break;
+		}
+	}
+	//lets the user remove a desired string z on tile(x,y).
+	this.remove = function(x,y,z){
+		switch(z){
+			case "top":
+				this.room[x][y].topdoor = false;
+				break;
+			case "left":
+				this.room[x][y].leftdoor = false;
+				break;
+			case "right":
+				this.room[x][y].rightdoor = false;
+				break;
+			case "down":
+				this.room[x][y].downdoor = false;
+				break;
+		}
+	}
+	//draws the room with all the tiles
+	this.draw = function(){
+		for(i = 0; i<7; i++){
+			for(j = 0; j<5; j++){
+				this.room[i][j].draw();
+			}
+		}
+	}
+	//adds safe on tile (x, y)
+	this.addSafe = function(x,y){
+		this.room[x][y].placeSafe();
+	}
+	//removes safe on tile (x, y)
+	this.removeSafe = function(x,y){
+		this.room[x][y].remove6Safe();
+	}
+}
+function Tile(tile_x, tile_y){
+	this.scale = 50; //the size of the entire tile on x axiz and y axis
+	this.positionx = tile_x; //the x-position of the tile in the canvas
+	this.positiony = tile_y; // the y-position of the tile in the canvas
+	this.topdoor = false; //boolean if it is possible to go up.
+	this.downdoor = false; //boolean if it is possible to go down
+	this.leftdoor = false; //boolean if it is possible to go left
+	this.rightdoor = false; //boolean if it is possible to go right
+	this.vision = false; //for fog of war purposes.
+	this.passed = false;
+	this.hasSafe = false;
+	//draws the said tile
+	this.draw = function(){
+		var topvalue = 0;
+		var downvalue = 0;
+		var rightvalue = 0;
+		var leftvalue = 0;
+		if(this.vision)
+			ctx.fillStyle = "#fff";
+		else if(this.passed)
+			ctx.fillStyle = "#777";
+		else
+			ctx.fillStyle = "#111";
+		if(!this.topdoor)
+			topvalue = 2;
+		if(!this.downdoor)
+			downvalue = 2;
+		if(!this.leftdoor)
+			leftvalue = 2;
+		if(!this.rightdoor)
+			rightvalue = 2;
+
+		ctx.fillRect(this.positionx+leftvalue, this.positiony+topvalue, this.scale-rightvalue-leftvalue, this.scale-topvalue-downvalue);
+
+		ctx.fillStyle = "#5f5";
+		if(this.hasSafe)
+			ctx.fillRect(this.positionx+leftvalue+((this.scale/6)*4), this.positiony+topvalue+((this.scale/5)*2), this.scale/6, this.scale/5);
+
+	}
+	this.placeSafe = function(){
+		this.hasSafe = true;
+	}
+	this.removeSafe = function(){
+		this.hasSafe = true;
+	}
+}
+function Person(){
+	this.canMove = true;
+	this.scale = 10; //the scale of the player in the canvas
+	this.positionx = 0; //the xposition of the person in the 2d array world
+	this.positiony = 0; //the xposition of the person in the 2d array world
+	//draws the person
+	this.draw = function(){
+		ctx.fillStyle = "#206060";
+		ctx.fillRect((this.positionx*50)+145, (this.positiony*50)+20, this.scale, this.scale);
+	}
+	this.setPosition = function(x,y){
+		this.positionx = x;
+		this.positiony = y;
+	}
+}
+function Level(levelnumber){
+	this.value = levelnumber;
+	this.gameWorld = new World(); //the world we interact with
+	this.player = new Person(); // the player of the game
+	this.guardSize = 0;//the number of guards in a level;
+	this.guard = [];//the array of guards
+	this.enemySpeed = 3;//speed of the enemy, max is 10. min is 0, the higher the number, the faster the enemy
+	//similar to add but automatically allows movement back
+	this.placeRoom = function(x,y,z){
+		this.gameWorld.placeRoom(x,y,z);
+	}
+	///makes the level able to make a particular tile[x][y] possible to go to a direction z
+	this.add = function(x,y,z){
+		this.gameWorld.add(x,y,z);
+	}
+	///makes the level able to make a particular tile[x][y] not possible to go to a direction z
+	this.remove = function(x,y,z){
+		this.gameWorld.remove(x,y,z);
+	}
+	//places a guard in the room on position (x,y)
+	this.addGuard = function(x,y){
+		var temp = new Guard();
+		temp.setPosition(x,y);
+		this.guard.push(temp);
+		this.guardSize++;
+	}
+	//adds destination path to a guard[a]
+	this.setDestination = function(a,x,y){
+		if(this.guardSize > 0)
+			this.guard[a].addDestination(x,y);
+	}
+	this.enterRoom = function(){
+		this.gameWorld.room[this.player.positiony][this.player.positionx].vision = true;
+	}
+	this.leaveRoom = function(){
+		this.gameWorld.room[this.player.positiony][this.player.positionx].passed = true;
+		this.gameWorld.room[this.player.positiony][this.player.positionx].vision = false;
+	}
+	//draws the world and the player
+	this.draw = function(){
+		this.gameWorld.draw();
+		this.player.draw();
+		for(i=0; i < this.guardSize; i++){
+			this.guard[i].draw();
+		}
+	}
+	this.updateLevel = function(){
+		if(this.player.canMove)
+			this.movePlayer();
+	}
+	this.placeSafe = function(x,y){
+		this.gameWorld.addSafe(x,y);
+	}
+	this.removeSafe = function(x,y){
+		this.gameWorld.removeSafe(x,y);
+	}
+	//moves the player based on user inputs and checks if it is possible to move
+	this.movePlayer = function(){
+		this.leaveRoom();
+		if(moveUp){
+			if(this.player.positiony > 0)
+				if(this.gameWorld.room[this.player.positiony][this.player.positionx].topdoor && this.gameWorld.room[this.player.positiony-1][this.player.positionx].downdoor){
+					this.player.positiony--;
+				}
+		}
+		if(moveDown){
+			if(this.player.positiony < 6)
+				if(this.gameWorld.room[this.player.positiony][this.player.positionx].downdoor && this.gameWorld.room[this.player.positiony+1][this.player.positionx].topdoor){
+					this.player.positiony++;
+				}
+		}
+		if(moveLeft){
+			if(this.player.positionx > 0)
+				if(this.gameWorld.room[this.player.positiony][this.player.positionx].leftdoor && this.gameWorld.room[this.player.positiony][this.player.positionx-1].rightdoor){
+					this.player.positionx--;
+				}
+		}
+		if(moveRight){
+			if(this.player.positionx < 4)
+				if(this.gameWorld.room[this.player.positiony][this.player.positionx].rightdoor && this.gameWorld.room[this.player.positiony][this.player.positionx+1].leftdoor){
+					this.player.positionx++;
+				}
+		}
+		this.enterRoom();
+	}
+	this.moveGuard = function(){
+		console.log("Moving Guard");
+		for(i=0; i < this.guardSize; i++){
+			this.guard[i].move();
+		}
+	}
+	this.startPlayer = function(x,y){
+		this.player.setPosition(y,x);
+	}
+	this.Finish = function(){
+		return this.gameWorld.room[this.player.positiony][this.player.positionx].hasSafe;
+	}
+	this.interactPlayer = function(){
+
+	}
+}
+function Guard(){
+	this.scale = 20;
+	this.canMove = true;
+	this.timer = 10;
+	this.positionx = 0;
+	this.positiony = 0;
+	this.bodyclock = 0;
+	this.state  = 0;//Normal State is 0, Warning State is 1, Alert State is 2
+	this.nextPositionx = [];
+	this.nextPositiony = [];
+
+	this.setPosition = function(y,x){
+		this.nextPositionx.push(x);
+		this.nextPositiony.push(y);
+		this.positionx = x;
+		this.positiony = y;
+		console.log(this.positionx + "," + this.positiony);
+	}
+	this.move = function(){
+		var x = this.nextPositionx.shift();
+		var y = this.nextPositiony.shift();
+		this.positionx = x;
+		this.positiony = y;
+		console.log(y + ", " + x);
+		this.addDestination(y,x);
+	}
+	this.addDestination = function(y,x){
+		this.nextPositionx.push(x);
+		this.nextPositiony.push(y);
+	}
+	this.updateState = function(x){
+	}
+	this.draw = function(){
+		ctx.fillStyle = "#f55";
+		ctx.fillRect((this.positionx*50)+140, (this.positiony*50)+15, this.scale, this.scale);
+		console.log("draw = " + this.positiony + ", " + this.positionx);
+	}
+}
+//---------------------------------------INPUTS-----------------------------------------------
+//key listeners for desired input
+var moveUp = false;
+var moveDown = false;
+var moveLeft = false;
+var moveRight = false;
+var interaction = false;
+document.onkeydown = function(event){
+	switch(event.keyCode){
+		//left
+		case 65:
+		case 37:
+			moveLeft = true;
+			console.log("Left");
+			break;	
+		//up
+		case 87:
+		case 38:
+			moveUp = true;
+			console.log("Up");
+			break;
+		//right
+		case 68:
+		case 39:
+			moveRight = true;
+			console.log("Right");
+			break;
+		//down
+		case 83:
+		case 40: 
+			moveDown = true;
+			console.log("Down");
+			break;
+		case 32:
+			interaction = true;
+			console.log("Interaction");
+			break;
+	}
+}
+document.onkeyup = function(event){
+	moveLeft = false;
+	moveUp = false;
+	moveRight = false;
+	moveDown = false;
+	interaction = false
+}
+//-----------------Level Design----------------------------------
+//room is the blocks of rooms that are allowed in this world. here you can just spawn rooms and edit them.
+//   [0,0][0,1][0,2][0,3][0,4]
+//   [1,0][1,1][1,2][1,3][1,4]
+//   [2,0][2,1][2,2][2,3][2,4]
+//   [3,0][3,1][3,2][3,3][3,4]
+//   [4,0][4,1][4,2][4,3][4,4]
+//   [5,0][5,1][5,2][5,3][5,4]
+//   [6,0][6,1][6,2][6,3][6,4]
+var ctx = document.getElementById("canvas").getContext("2d");
+var Level0 = new Level(0);
+var Level1 = new Level(1);
+function LevelDesign(){
+	Level0.startPlayer(0,0);
+	Level0.placeRoom(0,0,"right");
+	Level0.placeRoom(0,1,"down");
+	Level0.placeRoom(1,1,"right");
+	Level0.placeRoom(1,2,"down");
+	Level0.placeRoom(1,2,"right");
+	Level0.placeRoom(1,3,"right");
+	Level0.placeRoom(1,4,"down");
+	Level0.placeRoom(2,4,"down");
+	Level0.placeRoom(3,4,"left");
+	Level0.placeRoom(2,2,"down");
+	Level0.placeRoom(3,2,"right");
+	Level0.placeRoom(3,2,"down");
+	Level0.placeRoom(4,2,"down");
+	Level0.placeRoom(3,2,"left");
+	Level0.placeRoom(3,1,"left");
+	Level0.placeRoom(3,0,"down");
+	Level0.placeRoom(4,0,"down");
+	Level0.placeRoom(5,0,"right");
+	Level0.placeRoom(5,1,"right");
+	Level0.placeRoom(5,2,"right");
+	Level0.placeRoom(5,3,"down");
+	Level0.placeSafe(6,3);
+	Level0.addGuard(1,4);
+	Level0.setDestination(0,1,3);
+	Level0.setDestination(0,1,2);
+	Level0.setDestination(0,2,2);
+	Level0.setDestination(0,3,2);
+	Level0.setDestination(0,3,3);
+	Level0.setDestination(0,3,4);
+	Level0.setDestination(0,2,4);
+	Level1.startPlayer(0,1);
+	Level1.placeRoom(0,2,"left");
+	Level1.placeRoom(0,2,"right");
+	}
+
+
+//-------------------------------------MAIN LOOP-------------------------------------------
+//Update - where everything will be created and played out. The main loop
+var Speed = 2;
+var Counter = 10;
+var levelctr = 0;
+LevelDesign();
+function Update(){
+	if(Counter <= 0){
+		Counter = 10;
+		Level0.moveGuard();
+	}
+	ctx.fillStyle = "#000";
+	ctx.clearRect(0,0,500,500);
+	ctx.fillRect(0,0,500,500);
+	switch(levelctr){
+		case 0:
+			Level0.updateLevel();
+			Level0.draw();
+			if(Level0.Finish()){
+				levelctr++;
+			}
+			break;
+		case 1:
+			Level1.updateLevel();
+			Level1.draw();
+			break;
+	}
+	console.log(Level0.player.positiony + "," + Level0.player.positionx);
+	Counter -= Speed;
+}
+//setInterval - loops a function update for every 40 ms
+setInterval(Update,100);
