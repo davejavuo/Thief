@@ -468,7 +468,14 @@ LevelDesign();
 function Update(){
 	if(Counter <= 0){
 		Counter = 10;
-		Level0.moveGuard();
+		switch(levelctr){
+			case 0:
+				Level0.moveGuard();
+				break;
+			case 1:
+				Level1.moveGuard();
+				break;
+		}
 	}
 	ctx.fillStyle = "#000";
 	ctx.clearRect(0,0,500,500);
