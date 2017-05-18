@@ -402,7 +402,8 @@ function LevelDesign(){
 	Level0.placeRoom(5,1,"right");
 	Level0.placeRoom(5,2,"right");
 	Level0.placeRoom(5,3,"down");
-	Level0.placeSafe(6,3);
+	Level0.placeSafe(0,1); // Level0.placeSafe(6,3);
+	
 	Level0.addGuard(1,4);
 	Level0.setDestination(0,1,3);
 	Level0.setDestination(0,1,2);
@@ -411,9 +412,50 @@ function LevelDesign(){
 	Level0.setDestination(0,3,3);
 	Level0.setDestination(0,3,4);
 	Level0.setDestination(0,2,4);
-	Level1.startPlayer(0,1);
-	Level1.placeRoom(0,2,"left");
-	Level1.placeRoom(0,2,"right");
+
+	Level1.startPlayer(0,2);
+	Level1.placeRoom(0,2,"down");
+	Level1.placeRoom(1,2,"right");
+	Level1.placeRoom(1,2,"left");
+	Level1.placeRoom(1,3,"right");
+	Level1.placeRoom(1,1,"left");
+	Level1.placeRoom(1,0,"down");
+	Level1.placeRoom(1,4,"down");
+	Level1.placeRoom(2,0,"down");
+	Level1.placeRoom(2,4,"down");
+	Level1.placeRoom(3,0,"right");
+	Level1.placeRoom(3,4,"left");
+	Level1.placeRoom(3,1,"down");
+	Level1.placeRoom(3,3,"down");
+	Level1.placeRoom(1,3,"right");
+	Level1.placeRoom(1,3,"right");
+	Level1.placeRoom(1,2,"down");
+	Level1.placeRoom(2,2,"down");
+	Level1.placeRoom(3,1,"right");
+	Level1.placeRoom(3,3,"left");
+	Level1.placeRoom(5,1,"left");
+	Level1.placeRoom(4,1,"down");
+	Level1.placeRoom(4,3,"down");
+	Level1.placeRoom(5,1,"right");
+	Level1.placeRoom(5,2,"right");
+	Level1.placeRoom(5,3,"right");
+	Level1.placeRoom(5,0,"down");
+	Level1.placeRoom(5,4,"down");
+	Level1.placeRoom(5,2,"down");
+
+
+
+	Level1.addGuard(1,4);
+	Level1.setDestination(0,1,3);
+	Level1.setDestination(0,1,2);
+	Level1.setDestination(0,2,2);
+	Level1.setDestination(0,3,2);
+	Level1.setDestination(0,3,3);
+	Level1.setDestination(0,3,4);
+	Level1.setDestination(0,2,4);
+
+	Level1.addGuard(3,2);
+
 	}
 
 
