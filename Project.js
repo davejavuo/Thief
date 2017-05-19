@@ -121,6 +121,22 @@ function World(){
 		this.room[x][y].remove6Safe();
 	}
 }
+
+function sound(src) {
+    this.sound = document.createElement("audio");
+    this.sound.src = src;
+    this.sound.setAttribute("preload", "auto");
+    this.sound.setAttribute("controls", "none");
+    this.sound.style.display = "none";
+    document.body.appendChild(this.sound);
+    this.play = function(){
+        this.sound.play();
+    }
+    this.stop = function(){
+        this.sound.pause();
+    }
+}
+
 function Tile(tile_x, tile_y){
 	this.scale = 50; //the size of the entire tile on x axiz and y axis
 	this.positionx = tile_x; //the x-position of the tile in the canvas
@@ -182,6 +198,10 @@ function Person(){
 		this.positiony = y;
 	}
 }
+
+var mySound;
+mySound = new sound("vgame.mp3");
+
 function Level(levelnumber){
 	this.value = levelnumber;
 	this.gameWorld = new World(); //the world we interact with
@@ -190,6 +210,10 @@ function Level(levelnumber){
 	this.guard = [];//the array of guards
 	this.enemySpeed = 3;//speed of the enemy, max is 10. min is 0, the higher the number, the faster the enemy
 	//similar to add but automatically allows movement back
+
+	//Add music
+
+
 	this.placeRoom = function(x,y,z){
 		this.gameWorld.placeRoom(x,y,z);
 	}
@@ -229,6 +253,8 @@ function Level(levelnumber){
 		}
 	}
 	this.updateLevel = function(){
+		mySound.play();
+
 		if(this.player.canMove)
 			this.movePlayer();
 	}
@@ -377,9 +403,12 @@ document.onkeyup = function(event){
 //   [5,0][5,1][5,2][5,3][5,4]
 //   [6,0][6,1][6,2][6,3][6,4]
 var ctx = document.getElementById("canvas").getContext("2d");
+
 var Level0 = new Level(0);
 var Level1 = new Level(1);
 function LevelDesign(){
+
+
 	Level0.startPlayer(0,0);
 	Level0.placeRoom(0,0,"right");
 	Level0.placeRoom(0,1,"down");
@@ -447,16 +476,19 @@ function LevelDesign(){
 
 	Level1.addGuard(1,4);
 	Level1.setDestination(0,1,3);
-	Level1.setDestination(0,1,2);
-	Level1.setDestination(0,2,2);
-	Level1.setDestination(0,3,2);
-	Level1.setDestination(0,3,3);
-	Level1.setDestination(0,3,4);
-	Level1.setDestination(0,2,4);
+	// Level1.setDestination(0,1,2);
+	// Level1.setDestination(0,2,2);
+	// Level1.setDestination(0,3,2);
+	// Level1.setDestination(0,3,3);
+	// Level1.setDestination(0,3,4);
+	// Level1.setDestination(0,2,4);
 
 	Level1.addGuard(3,2);
+	Level1.setDestination(0,3,1);
 
-	}
+
+}
+
 
 
 //-------------------------------------MAIN LOOP-------------------------------------------
@@ -464,6 +496,7 @@ function LevelDesign(){
 var Speed = 2;
 var Counter = 10;
 var levelctr = 0;
+
 LevelDesign();
 function Update(){
 	if(Counter <= 0){
@@ -475,8 +508,21 @@ function Update(){
 			case 1:
 				Level1.moveGuard();
 				break;
+			case 2:
+				Level2.moveGuard();
+				break;
+			case 3:
+				Level3.moveGuard();
+				break;
+			case 4:
+				Level4.moveGuard();
+				break;
+			case 5:
+				Level5.moveGuard();
+				break;
 		}
 	}
+
 	ctx.fillStyle = "#000";
 	ctx.clearRect(0,0,500,500);
 	ctx.fillRect(0,0,500,500);
