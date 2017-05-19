@@ -1,5 +1,6 @@
 //---------------------------------------------BASE CODE-----------------------------------
 function World(){
+
 	this.scale = 50; //the size of a room
 	this.room_origin_x = 125; //starting x position of the world
 	this.room_origin_y = 0; //starting y position of the world
@@ -11,6 +12,7 @@ function World(){
 	//   [4,0][4,1][4,2][4,3][4,4]
 	//   [5,0][5,1][5,2][5,3][5,4]
 	//   [6,0][6,1][6,2][6,3][6,4]
+
 	this.room = [
 					[new Tile(this.room_origin_x, this.room_origin_y),										//[0][0]
 					 new Tile(this.room_origin_x + this.scale, this.room_origin_y),							//[0][1]
@@ -48,6 +50,7 @@ function World(){
 					 new Tile(this.room_origin_x + (this.scale*3), this.room_origin_y + (this.scale*6)),	//[6][3]
 					 new Tile(this.room_origin_x + (this.scale*4), this.room_origin_y + (this.scale*6))]	//[6][4]
 				];
+	
 	//similar to add but automatically allows movement back
 	this.placeRoom = function(x,y,z){
 		switch(z){
@@ -69,6 +72,7 @@ function World(){
 				break;
 		}
 	}
+	
 	//lets the user be able to move to a direction z from tile(x,y)
 	this.add = function(x,y,z){
 		this.room[x][y].passed = true;
@@ -87,6 +91,7 @@ function World(){
 				break;
 		}
 	}
+	
 	//lets the user remove a desired string z on tile(x,y).
 	this.remove = function(x,y,z){
 		switch(z){
@@ -104,6 +109,7 @@ function World(){
 				break;
 		}
 	}
+	
 	//draws the room with all the tiles
 	this.draw = function(){
 		for(i = 0; i<7; i++){
@@ -112,10 +118,12 @@ function World(){
 			}
 		}
 	}
+	
 	//adds safe on tile (x, y)
 	this.addSafe = function(x,y){
 		this.room[x][y].placeSafe();
 	}
+	
 	//removes safe on tile (x, y)
 	this.removeSafe = function(x,y){
 		this.room[x][y].remove6Safe();
@@ -128,10 +136,13 @@ function sound(src) {
     this.sound.setAttribute("preload", "auto");
     this.sound.setAttribute("controls", "none");
     this.sound.style.display = "none";
+    
     document.body.appendChild(this.sound);
+    
     this.play = function(){
         this.sound.play();
     }
+    
     this.stop = function(){
         this.sound.pause();
     }
@@ -148,6 +159,7 @@ function Tile(tile_x, tile_y){
 	this.vision = false; //for fog of war purposes.
 	this.passed = false;
 	this.hasSafe = false;
+	
 	//draws the said tile
 	this.draw = function(){
 		var topvalue = 0;
@@ -176,9 +188,11 @@ function Tile(tile_x, tile_y){
 			ctx.fillRect(this.positionx+leftvalue+((this.scale/6)*4), this.positiony+topvalue+((this.scale/5)*2), this.scale/6, this.scale/5);
 
 	}
+	
 	this.placeSafe = function(){
 		this.hasSafe = true;
 	}
+	
 	this.removeSafe = function(){
 		this.hasSafe = true;
 	}
@@ -189,10 +203,12 @@ function Person(){
 	this.positionx = 0; //the xposition of the person in the 2d array world
 	this.positiony = 0; //the xposition of the person in the 2d array world
 	//draws the person
+	
 	this.draw = function(){
 		ctx.fillStyle = "#206060";
 		ctx.fillRect((this.positionx*50)+145, (this.positiony*50)+20, this.scale, this.scale);
 	}
+	
 	this.setPosition = function(x,y){
 		this.positionx = x;
 		this.positiony = y;
@@ -211,20 +227,20 @@ function Level(levelnumber){
 	this.enemySpeed = 3;//speed of the enemy, max is 10. min is 0, the higher the number, the faster the enemy
 	//similar to add but automatically allows movement back
 
-	//Add music
-
-
 	this.placeRoom = function(x,y,z){
 		this.gameWorld.placeRoom(x,y,z);
 	}
+	
 	///makes the level able to make a particular tile[x][y] possible to go to a direction z
 	this.add = function(x,y,z){
 		this.gameWorld.add(x,y,z);
 	}
+	
 	///makes the level able to make a particular tile[x][y] not possible to go to a direction z
 	this.remove = function(x,y,z){
 		this.gameWorld.remove(x,y,z);
 	}
+	
 	//places a guard in the room on position (x,y)
 	this.addGuard = function(x,y){
 		var temp = new Guard();
@@ -232,18 +248,22 @@ function Level(levelnumber){
 		this.guard.push(temp);
 		this.guardSize++;
 	}
+	
 	//adds destination path to a guard[a]
 	this.setDestination = function(a,x,y){
 		if(this.guardSize > 0)
 			this.guard[a].addDestination(x,y);
 	}
+	
 	this.enterRoom = function(){
 		this.gameWorld.room[this.player.positiony][this.player.positionx].vision = true;
 	}
+	
 	this.leaveRoom = function(){
 		this.gameWorld.room[this.player.positiony][this.player.positionx].passed = true;
 		this.gameWorld.room[this.player.positiony][this.player.positionx].vision = false;
 	}
+	
 	//draws the world and the player
 	this.draw = function(){
 		this.gameWorld.draw();
@@ -252,18 +272,22 @@ function Level(levelnumber){
 			this.guard[i].draw();
 		}
 	}
+	
 	this.updateLevel = function(){
 		mySound.play();
 
 		if(this.player.canMove)
 			this.movePlayer();
 	}
+	
 	this.placeSafe = function(x,y){
 		this.gameWorld.addSafe(x,y);
 	}
+	
 	this.removeSafe = function(x,y){
 		this.gameWorld.removeSafe(x,y);
 	}
+	
 	//moves the player based on user inputs and checks if it is possible to move
 	this.movePlayer = function(){
 		this.leaveRoom();
@@ -293,18 +317,22 @@ function Level(levelnumber){
 		}
 		this.enterRoom();
 	}
+	
 	this.moveGuard = function(){
 		console.log("Moving Guard");
 		for(i=0; i < this.guardSize; i++){
 			this.guard[i].move();
 		}
 	}
+	
 	this.startPlayer = function(x,y){
 		this.player.setPosition(y,x);
 	}
+	
 	this.Finish = function(){
 		return this.gameWorld.room[this.player.positiony][this.player.positionx].hasSafe;
 	}
+	
 	this.interactPlayer = function(){
 
 	}
