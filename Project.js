@@ -414,6 +414,7 @@ document.onkeydown = function(event){
 			break;
 	}
 }
+
 document.onkeyup = function(event){
 	moveLeft = false;
 	moveUp = false;
