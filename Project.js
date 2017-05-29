@@ -316,7 +316,6 @@ function Level(levelnumber){
 		mySound.play();
 
 		if(this.player.canMove)
-			this.movePlayer();
 	}
 	
 	this.placeSafe = function(x,y){
@@ -408,10 +407,6 @@ function Level(levelnumber){
 	this.checkValues = function(){
 		this.requirements = this.gameWorld.checkValues();
 		console.log(this.requirements);
-	}
-
-	this.interactPlayer = function(){
-
 	}
 }
 
