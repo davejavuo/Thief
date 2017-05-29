@@ -313,7 +313,6 @@ function Level(levelnumber){
 		mySound.play();
 
 		if(this.player.canMove)
-			this.movePlayer();
 	}
 	
 	this.placeSafe = function(x,y){
@@ -405,10 +404,6 @@ function Level(levelnumber){
 	this.checkValues = function(){
 		this.requirements = this.gameWorld.checkValues();
 		console.log(this.requirements);
-	}
-
-	this.interactPlayer = function(){
-
 	}
 }
 
@@ -509,8 +504,6 @@ var ctx = document.getElementById("canvas").getContext("2d");
 var Level0 = new Level(0);
 var Level1 = new Level(1);
 function LevelDesign(){
-
-
 	Level0.startPlayer(0,0);
 	Level0.placeRoom(0,0,"right");
 	Level0.placeRoom(0,1,"down");
@@ -610,12 +603,6 @@ function LevelDesign(){
 	Level1.setDestination(1,3,1);
 	Level1.setDestination(1,3,2);
 	Level1.placeSafe(6,2);
-	// Level1.setDestination(0,1,2);
-	// Level1.setDestination(0,2,2);
-	// Level1.setDestination(0,3,2);
-	// Level1.setDestination(0,3,3);
-	// Level1.setDestination(0,3,4);
-	// Level1.setDestination(0,2,4);
 
 }
 
