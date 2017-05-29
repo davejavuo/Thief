@@ -240,6 +240,9 @@ function Person(){
 var mySound;
 mySound = new sound("vgame.mp3");
 
+var coinImage = new Image();
+coinImage.src = "images/coin-sprite-animation.png";
+
 function Level(levelnumber){
 	this.value = levelnumber;
 	this.gameWorld = new World(); //the world we interact with
@@ -508,8 +511,11 @@ var ctx = document.getElementById("canvas").getContext("2d");
 
 var Level0 = new Level(0);
 var Level1 = new Level(1);
-function LevelDesign(){
+var Level2 = new Level(2);
+var Level3 = new Level(3);
+var Level4 = new Level(4);
 
+function LevelDesign(){
 
 	Level0.startPlayer(0,0);
 	Level0.placeRoom(0,0,"right");
@@ -541,7 +547,7 @@ function LevelDesign(){
 	Level0.placeRoom(5,2,"right");
 	Level0.placeRoom(5,3,"down");
 	Level0.checkValues();
-	Level0.placeSafe(6,3); // Level0.placeSafe(6,3);
+	Level0.placeSafe(1,1); // Level0.placeSafe(6,3);
 	
 	Level0.addGuard(1,4);
 	Level0.setDestination(0,1,3);
@@ -552,70 +558,258 @@ function LevelDesign(){
 	Level0.setDestination(0,3,4);
 	Level0.setDestination(0,2,4);
 
-	Level1.startPlayer(0,2);
-	Level1.placeRoom(0,2,"down");
-	Level1.placeRoom(1,2,"right");
-	Level1.placeRoom(1,2,"left");
-	Level1.placeRoom(1,3,"right");
-	Level1.placeRoom(1,1,"left");
-	Level1.placeRoom(1,0,"down");
+	Level1.startPlayer(0,0);
+	Level1.placeRoom(0,0,"right");
+	Level1.placeRoom(0,1,"down");
+	Level1.placeRoom(0,2,"right");
+	Level1.placeRoom(0,3,"right");
+	Level1.placeRoom(0,4,"down");
 	Level1.placeRoom(1,4,"down");
-	Level1.placeRoom(2,0,"down");
 	Level1.placeRoom(2,4,"down");
-	Level1.placeRoom(3,0,"right");
-	Level1.placeRoom(3,4,"left");
-	Level1.placeRoom(3,1,"down");
-	Level1.placeRoom(3,3,"down");
-	Level1.placeRoom(1,3,"right");
-	Level1.placeRoom(1,3,"right");
-	Level1.placeRoom(1,2,"down");
-	Level1.placeRoom(2,2,"down");
-	Level1.placeRoom(3,1,"right");
-	Level1.placeRoom(3,3,"left");
-	Level1.placeRoom(5,1,"left");
-	Level1.placeRoom(4,1,"down");
-	Level1.placeRoom(4,3,"down");
-	Level1.placeRoom(5,1,"right");
-	Level1.placeRoom(5,2,"right");
-	Level1.placeRoom(5,3,"right");
-	Level1.placeRoom(5,0,"down");
+	Level1.placeRoom(3,4,"down");
+	Level1.placeRoom(4,4,"down");
 	Level1.placeRoom(5,4,"down");
+
+	Level1.placeRoom(2,3,"down");
+	Level1.placeRoom(3,3,"down");
+
+	Level1.placeRoom(1,1,"down");
+	Level1.placeRoom(2,0,"down");
+	Level1.placeRoom(2,0,"right");
+	Level1.placeRoom(3,0,"down");
+	Level1.placeRoom(4,0,"down");
+	Level1.placeRoom(5,0,"down");
+
+	Level1.placeRoom(0,4,"down");
+	Level1.placeRoom(1,4,"down");
+	Level1.placeRoom(2,4,"down");
+	Level1.placeRoom(3,4,"down");
+	Level1.placeRoom(4,4,"down");
+	// Level1.placeRoom(6,3,"right");
+	Level1.placeRoom(6,0,"right");
+	Level1.placeRoom(6,1,"right");
 	Level1.placeRoom(5,2,"down");
+	Level1.placeRoom(4,2,"down");
+	Level1.placeRoom(5,1,"right");
+
+	Level1.placeRoom(4,1,"down");
+	Level1.placeRoom(5,1,"down");
+	Level1.placeRoom(4,1,"right");
+	Level1.placeRoom(4,0,"right");
+	Level1.placeRoom(5,0,"right");
+	Level1.placeRoom(4,2,"right");
+	Level1.placeRoom(0,2,"down");
+	Level1.placeRoom(1,2,"down");
+	Level1.placeRoom(2,2,"right");
+
+	Level1.placeRoom(0,1,"right");
+	Level1.placeRoom(1,1,"right");
+	Level1.placeRoom(2,1,"right");
+
+	Level1.placeRoom(2,3,"right");
+	Level1.placeRoom(3,3,"right");
+	Level1.placeRoom(4,3,"right");
+
+
 	Level1.checkValues();
 	Level1.clearGuard();
 
-	Level1.addGuard(1,1);
-	Level1.setDestination(0,1,0);
-	Level1.setDestination(0,2,0);
-	Level1.setDestination(0,3,0);
-	Level1.setDestination(0,3,1);
-	Level1.setDestination(0,3,2);
-	Level1.setDestination(0,3,3);
-	Level1.setDestination(0,3,4);
-	Level1.setDestination(0,2,4);
-	Level1.setDestination(0,1,4);
-	Level1.setDestination(0,1,3);
-	Level1.setDestination(0,1,2);
-
-	Level1.addGuard(3,3);
-	Level1.setDestination(1,3,4);
+	Level1.placeSafe(0,1); // Level0.placeSafe(6,3);
+	
+	Level1.addGuard(4,0);
+	Level1.setDestination(0,5,0);
+	Level1.setDestination(0,6,0);
+	Level1.setDestination(0,6,1);
+	Level1.setDestination(0,6,2);
+	Level1.setDestination(0,5,2);
+	Level1.setDestination(0,4,2);
+	Level1.setDestination(0,4,1);
+	
+	Level1.addGuard(0,2);
+	Level1.setDestination(1,1,2);
+	Level1.setDestination(1,2,2);
+	Level1.setDestination(1,2,3);
 	Level1.setDestination(1,2,4);
 	Level1.setDestination(1,1,4);
-	Level1.setDestination(1,1,3);
-	Level1.setDestination(1,1,2);
-	Level1.setDestination(1,1,1);
-	Level1.setDestination(1,1,0);
-	Level1.setDestination(1,2,0);
-	Level1.setDestination(1,3,0);
-	Level1.setDestination(1,3,1);
-	Level1.setDestination(1,3,2);
-	Level1.placeSafe(6,2);
-	// Level1.setDestination(0,1,2);
-	// Level1.setDestination(0,2,2);
-	// Level1.setDestination(0,3,2);
-	// Level1.setDestination(0,3,3);
-	// Level1.setDestination(0,3,4);
-	// Level1.setDestination(0,2,4);
+	Level1.setDestination(1,0,4);
+	Level1.setDestination(1,0,3);
+
+
+
+	Level2.startPlayer(0,1);
+	Level2.placeRoom(0,1,"down");
+	Level2.placeRoom(1,1,"left");
+	Level2.placeRoom(1,0,"down");
+	Level2.placeRoom(2,0,"down");
+	Level2.placeRoom(2,4,"down");
+	Level2.placeRoom(3,0,"right");
+	Level2.placeRoom(3,4,"left");
+	Level2.placeRoom(3,1,"down");
+	Level2.placeRoom(3,3,"down");
+	Level2.placeRoom(2,2,"down");
+	Level2.placeRoom(3,1,"right");
+	Level2.placeRoom(3,3,"left");
+	Level2.placeRoom(5,1,"left");
+	Level2.placeRoom(4,1,"down");
+	Level2.placeRoom(4,3,"down");
+	Level2.placeRoom(5,1,"right");
+	Level2.placeRoom(5,2,"right");
+	Level2.placeRoom(5,3,"right");
+	Level2.placeRoom(5,0,"down");
+	Level2.placeRoom(5,4,"down");
+	Level2.placeRoom(5,2,"down");
+	Level2.placeRoom(6,0,"right");
+	Level2.placeRoom(6,1,"right");
+	Level2.placeRoom(3,2,"down");
+	Level2.placeRoom(4,2,"down");
+	Level2.placeRoom(2,2,"right");
+	Level2.placeRoom(2,2,"right");
+	Level2.placeRoom(2,3,"right");
+	Level2.placeRoom(0,3,"down");
+	Level2.placeRoom(0,3,"right");
+	Level2.placeRoom(0,4,"down");
+	Level2.placeRoom(1,3,"right");
+	Level2.placeRoom(1,3,"down");
+	Level2.placeRoom(1,4,"down");
+	Level2.placeRoom(5,1,"down");
+	Level2.placeRoom(1,2,"down");
+	Level2.placeRoom(1,2,"right");
+	Level2.placeRoom(1,1,"right");
+	Level2.placeRoom(0,2,"right");
+	Level2.placeRoom(0,2,"down");
+	Level2.placeRoom(0,2,"left");
+
+
+	Level2.checkValues();
+	Level2.clearGuard();
+
+	Level2.addGuard(1,0);
+	Level2.setDestination(0,2,0);
+	Level2.setDestination(0,3,0);
+	Level2.setDestination(0,3,1);
+	Level2.setDestination(0,3,2);
+	Level2.setDestination(0,2,2);
+	Level2.setDestination(0,1,2);
+	Level2.setDestination(0,1,1);
+
+	Level2.addGuard(0,4);
+	Level2.setDestination(1,1,4);
+	Level2.setDestination(1,2,4);
+	Level2.setDestination(1,2,3);
+	Level2.setDestination(1,2,2);
+	Level2.setDestination(1,1,2);
+	Level2.setDestination(1,0,2);
+	Level2.setDestination(1,0,3);
+
+	Level2.placeSafe(1,1); //Level1.placeSafe(6,4); //
+	
+
+	Level3.startPlayer(3,2);
+	Level3.placeRoom(1,0,"right");
+	Level3.placeRoom(1,1,"right");
+	Level3.placeRoom(1,2,"right");
+	Level3.placeRoom(1,3,"right");
+	Level3.placeRoom(1,0,"down");
+	Level3.placeRoom(1,1,"down");
+	Level3.placeRoom(1,2,"down");
+	Level3.placeRoom(1,3,"down");
+	Level3.placeRoom(1,4,"down");
+	
+	Level3.placeRoom(2,0,"right");
+	Level3.placeRoom(2,1,"right");
+	Level3.placeRoom(2,2,"right");
+	Level3.placeRoom(2,3,"right");
+	Level3.placeRoom(2,0,"down");
+	Level3.placeRoom(2,1,"down");
+	Level3.placeRoom(2,2,"down");
+	Level3.placeRoom(2,3,"down");
+	Level3.placeRoom(2,4,"down");
+
+	Level3.placeRoom(3,0,"right");
+	Level3.placeRoom(3,1,"right");
+	Level3.placeRoom(3,2,"right");
+	Level3.placeRoom(3,3,"right");
+	Level3.placeRoom(3,0,"down");
+	Level3.placeRoom(3,1,"down");
+	Level3.placeRoom(3,2,"down");
+	Level3.placeRoom(3,3,"down");
+	Level3.placeRoom(3,4,"down");
+
+	Level3.placeRoom(4,0,"right");
+	Level3.placeRoom(4,1,"right");
+	Level3.placeRoom(4,2,"right");
+	Level3.placeRoom(4,3,"right");
+	Level3.placeRoom(3,0,"down");
+	Level3.placeRoom(3,1,"down");
+	Level3.placeRoom(3,2,"down");
+	Level3.placeRoom(3,3,"down");
+	Level3.placeRoom(3,4,"down");
+
+	Level3.placeRoom(5,0,"right");
+	Level3.placeRoom(5,1,"right");
+	Level3.placeRoom(5,2,"right");
+	Level3.placeRoom(5,3,"right");
+	Level3.placeRoom(3,0,"down");
+	Level3.placeRoom(3,1,"down");
+	Level3.placeRoom(3,2,"down");
+	Level3.placeRoom(3,3,"down");
+	Level3.placeRoom(3,4,"down");
+	Level3.placeRoom(4,0,"down");
+	Level3.placeRoom(4,1,"down");
+	Level3.placeRoom(4,2,"down");
+	Level3.placeRoom(4,3,"down");
+	Level3.placeRoom(5,0,"down");
+	Level3.placeRoom(5,1,"down");
+	Level3.placeRoom(5,2,"down");
+	Level3.placeRoom(5,3,"down");
+	Level3.placeRoom(4,4,"down");
+
+	Level3.placeRoom(6,0,"right");
+	Level3.placeRoom(6,1,"right");
+	Level3.placeRoom(6,2,"right");
+
+
+	Level3.checkValues();
+	Level3.clearGuard();
+
+	Level3.addGuard(1,0);
+	Level3.setDestination(0,2,0);
+	Level3.setDestination(0,3,0);
+	Level3.setDestination(0,4,0);
+	Level3.setDestination(0,5,0);
+	Level3.setDestination(0,5,1);
+	Level3.setDestination(0,5,2);
+	Level3.setDestination(0,5,3);
+	Level3.setDestination(0,5,4);
+	Level3.setDestination(0,4,4);
+	Level3.setDestination(0,3,4);
+	Level3.setDestination(0,2,4);
+	Level3.setDestination(0,1,4);
+	Level3.setDestination(0,1,3);
+	Level3.setDestination(0,1,2);
+	Level3.setDestination(0,1,1);
+
+	Level3.addGuard(2,1);
+	Level3.setDestination(1,3,1);
+	Level3.setDestination(1,4,1);
+	Level3.setDestination(1,4,2);
+	Level3.setDestination(1,4,3);
+	Level3.setDestination(1,3,3);
+	Level3.setDestination(1,2,3);
+	Level3.setDestination(1,2,2);
+
+	Level3.placeSafe(6,3); //Level1.placeSafe(6,4); //
+
+//   [0,0][0,1][0,2][0,3][0,4]
+//   [1,0][1,1][1,2][1,3][1,4]
+//   [2,0][2,1][2,2][2,3][2,4]
+//   [3,0][3,1][3,2][3,3][3,4]
+//   [4,0][4,1][4,2][4,3][4,4]
+//   [5,0][5,1][5,2][5,3][5,4]
+//   [6,0][6,1][6,2][6,3][6,4]
+
+	Level4.startPlayer(3,2);
+	Level4.placeRoom(1,0,"right");
 
 }
 
@@ -660,7 +854,7 @@ function Update(){
 		case 0:
 			Level0.updateLevel();
 			Level0.draw();
-			if(Level0.Finish() && Level0.current == Level0.requirements){
+			if(Level0.Finish()){ // && Level0.current == Level0.requirements
 				levelctr++;
 			}
 			Level1.fightGuard();
@@ -668,7 +862,34 @@ function Update(){
 		case 1:
 			Level1.updateLevel();
 			Level1.draw();
+			if(Level1.Finish()){ // && Level2.current == Level2.requirements
+				levelctr++;
+			}
 			Level1.fightGuard();
+			break;
+		case 2:
+			Level2.updateLevel();
+			Level2.draw();
+			if(Level2.Finish()){ // && Level2.current == Level2.requirements
+				levelctr++;
+			}
+			Level2.fightGuard();
+			break;
+		case 3:
+			Level3.updateLevel();
+			Level3.draw();
+			if(Level3.Finish()){ // && Level2.current == Level2.requirements
+				levelctr++;
+			}
+			Level3.fightGuard();
+			break;
+		case 4:
+			Level4.updateLevel();
+			Level4.draw();
+			if(Level4.Finish()){ // && Level2.current == Level2.requirements
+				levelctr++;
+			}
+			Level4.fightGuard();
 			break;
 	}
 	Counter -= Speed;
