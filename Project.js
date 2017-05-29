@@ -134,6 +134,18 @@ function World(){
 	this.removeSafe = function(x,y){
 		this.room[x][y].remove6Safe();
 	}
+
+	this.checkValues = function(){
+		var temp = 0;
+		for(i = 0; i<7; i++){
+			for(j = 0; j<5; j++){
+				if(this.room[i][j].passed){
+					temp++;
+				}
+			}
+		}
+		return temp;
+	}
 }
 
 function sound(src) {
@@ -238,6 +250,8 @@ function Level(levelnumber){
 	//similar to add but automatically allows movement back
 	this.StartX = 0;
 	this.StartY = 0;
+	this.requirements = 0;
+	this.current = 0;
 
 	this.placeRoom = function(x,y,z){
 		this.gameWorld.placeRoom(x,y,z);
@@ -272,6 +286,8 @@ function Level(levelnumber){
 		if(this.gameWorld.room[this.player.positiony][this.player.positionx].value == 0){
 			this.gameWorld.room[this.player.positiony][this.player.positionx].value = 1;
 			this.checkGuard(this.player.positionx, this.player.positiony);
+			this.current++;
+			console.log("Score: " + this.current);
 		}
 		else{
 			this.gameWorld.resetWorld();
@@ -363,6 +379,7 @@ function Level(levelnumber){
 	}
 
 	this.startPlayer = function(x,y){
+		this.current = 1;
 		this.player.setPosition(y,x);
 		this.gameWorld.room[this.player.positiony][this.player.positionx].value = true;
 		this.StartX = y;
@@ -385,6 +402,11 @@ function Level(levelnumber){
 			this.startPlayer(this.StartY, this.StartX);
 		}
 	}
+	this.checkValues = function(){
+		this.requirements = this.gameWorld.checkValues();
+		console.log(this.requirements);
+	}
+
 	this.interactPlayer = function(){
 
 	}
@@ -518,6 +540,7 @@ function LevelDesign(){
 	Level0.placeRoom(5,1,"right");
 	Level0.placeRoom(5,2,"right");
 	Level0.placeRoom(5,3,"down");
+	Level0.checkValues();
 	Level0.placeSafe(6,3); // Level0.placeSafe(6,3);
 	
 	Level0.addGuard(1,4);
@@ -558,6 +581,7 @@ function LevelDesign(){
 	Level1.placeRoom(5,0,"down");
 	Level1.placeRoom(5,4,"down");
 	Level1.placeRoom(5,2,"down");
+	Level1.checkValues();
 	Level1.clearGuard();
 
 	Level1.addGuard(1,1);
@@ -636,7 +660,7 @@ function Update(){
 		case 0:
 			Level0.updateLevel();
 			Level0.draw();
-			if(Level0.Finish()){
+			if(Level0.Finish() && Level0.current == Level0.requirements){
 				levelctr++;
 			}
 			Level1.fightGuard();
