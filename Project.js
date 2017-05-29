@@ -316,6 +316,7 @@ function Level(levelnumber){
 		mySound.play();
 
 		if(this.player.canMove)
+			this.movePlayer();
 	}
 	
 	this.placeSafe = function(x,y){
@@ -407,6 +408,10 @@ function Level(levelnumber){
 	this.checkValues = function(){
 		this.requirements = this.gameWorld.checkValues();
 		console.log(this.requirements);
+	}
+
+	this.interactPlayer = function(){
+
 	}
 }
 
@@ -803,9 +808,9 @@ function LevelDesign(){
 //   [5,0][5,1][5,2][5,3][5,4]
 //   [6,0][6,1][6,2][6,3][6,4]
 
-	Level4.startPlayer(3,2);
-	Level4.placeRoom(1,0,"right");
-
+	Level3.startPlayer(3,2);
+	Level3.placeRoom(1,0,"right");
+	
 }
 
 
