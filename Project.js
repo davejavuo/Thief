@@ -226,7 +226,7 @@ function Person(){
 }
 
 var mySound;
-mySound = new sound("dd");
+mySound = new sound("vgame.mp3");
 
 function Level(levelnumber){
 	this.value = levelnumber;
@@ -492,6 +492,11 @@ function LevelDesign(){
 	Level0.startPlayer(0,0);
 	Level0.placeRoom(0,0,"right");
 	Level0.placeRoom(0,1,"down");
+	Level0.placeRoom(1,1,"down");
+	Level0.placeRoom(2,1,"down");
+	Level0.placeRoom(1,3,"top");
+	Level0.placeRoom(0,3,"right");
+	Level0.placeRoom(0,4,"down");
 	Level0.placeRoom(1,1,"right");
 	Level0.placeRoom(1,2,"down");
 	Level0.placeRoom(1,2,"right");
@@ -506,6 +511,8 @@ function LevelDesign(){
 	Level0.placeRoom(3,2,"left");
 	Level0.placeRoom(3,1,"left");
 	Level0.placeRoom(3,0,"down");
+	Level0.placeRoom(3,3,"down");
+	Level0.placeRoom(4,3,"down");
 	Level0.placeRoom(4,0,"down");
 	Level0.placeRoom(5,0,"right");
 	Level0.placeRoom(5,1,"right");
@@ -553,7 +560,6 @@ function LevelDesign(){
 	Level1.placeRoom(5,2,"down");
 	Level1.clearGuard();
 
-<<<<<<< HEAD
 	Level1.addGuard(1,1);
 	Level1.setDestination(0,1,0);
 	Level1.setDestination(0,2,0);
@@ -580,16 +586,12 @@ function LevelDesign(){
 	Level1.setDestination(1,3,1);
 	Level1.setDestination(1,3,2);
 	Level1.placeSafe(6,2);
-=======
-	Level1.addGuard(1,4);
-	Level1.setDestination(0,1,3);
 	// Level1.setDestination(0,1,2);
 	// Level1.setDestination(0,2,2);
 	// Level1.setDestination(0,3,2);
 	// Level1.setDestination(0,3,3);
 	// Level1.setDestination(0,3,4);
 	// Level1.setDestination(0,2,4);
->>>>>>> 43ab7ca4be77e4711ecc0f2d366971b45d6d04c5
 
 }
 
