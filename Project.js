@@ -72,7 +72,13 @@ function World(){
 				break;
 		}
 	}
-	
+	this.resetWorld = function(){
+		for(i = 0; i<7; i++){
+			for(j = 0; j<5; j++){
+				this.room[i][j].value = 0;
+			}
+		}
+	}
 	//lets the user be able to move to a direction z from tile(x,y)
 	this.add = function(x,y,z){
 		this.room[x][y].passed = true;
@@ -158,6 +164,7 @@ function Tile(tile_x, tile_y){
 	this.rightdoor = false; //boolean if it is possible to go right
 	this.vision = false; //for fog of war purposes.
 	this.passed = false;
+	this.value = 0;
 	this.hasSafe = false;
 	
 	//draws the said tile
@@ -166,10 +173,12 @@ function Tile(tile_x, tile_y){
 		var downvalue = 0;
 		var rightvalue = 0;
 		var leftvalue = 0;
-		if(this.vision)
-			ctx.fillStyle = "#fff";
-		else if(this.passed)
-			ctx.fillStyle = "#777";
+		if(this.passed){
+			if(this.value == 0)
+				ctx.fillStyle = "#777";
+			else if(this.value == 1)
+				ctx.fillStyle = "#99bcff";
+		}
 		else
 			ctx.fillStyle = "#111";
 		if(!this.topdoor)
@@ -226,6 +235,8 @@ function Level(levelnumber){
 	this.guard = [];//the array of guards
 	this.enemySpeed = 3;//speed of the enemy, max is 10. min is 0, the higher the number, the faster the enemy
 	//similar to add but automatically allows movement back
+	this.StartX = 0;
+	this.StartY = 0;
 
 	this.placeRoom = function(x,y,z){
 		this.gameWorld.placeRoom(x,y,z);
@@ -257,6 +268,14 @@ function Level(levelnumber){
 	
 	this.enterRoom = function(){
 		this.gameWorld.room[this.player.positiony][this.player.positionx].vision = true;
+		if(this.gameWorld.room[this.player.positiony][this.player.positionx].value == 0){
+			this.gameWorld.room[this.player.positiony][this.player.positionx].value = 1;
+			this.checkGuard(this.player.positionx, this.player.positiony);
+		}
+		else{
+			this.gameWorld.resetWorld();
+			this.startPlayer(this.StartY, this.StartX);
+		}
 	}
 	
 	this.leaveRoom = function(){
@@ -290,49 +309,81 @@ function Level(levelnumber){
 	
 	//moves the player based on user inputs and checks if it is possible to move
 	this.movePlayer = function(){
-		this.leaveRoom();
 		if(moveUp){
 			if(this.player.positiony > 0)
 				if(this.gameWorld.room[this.player.positiony][this.player.positionx].topdoor && this.gameWorld.room[this.player.positiony-1][this.player.positionx].downdoor){
+					this.leaveRoom();
 					this.player.positiony--;
+					this.enterRoom();
 				}
 		}
 		if(moveDown){
 			if(this.player.positiony < 6)
 				if(this.gameWorld.room[this.player.positiony][this.player.positionx].downdoor && this.gameWorld.room[this.player.positiony+1][this.player.positionx].topdoor){
+					this.leaveRoom();
 					this.player.positiony++;
+					this.enterRoom();
 				}
 		}
 		if(moveLeft){
 			if(this.player.positionx > 0)
 				if(this.gameWorld.room[this.player.positiony][this.player.positionx].leftdoor && this.gameWorld.room[this.player.positiony][this.player.positionx-1].rightdoor){
+					this.leaveRoom();
 					this.player.positionx--;
+					this.enterRoom();
 				}
 		}
 		if(moveRight){
 			if(this.player.positionx < 4)
 				if(this.gameWorld.room[this.player.positiony][this.player.positionx].rightdoor && this.gameWorld.room[this.player.positiony][this.player.positionx+1].leftdoor){
+					this.leaveRoom();
 					this.player.positionx++;
+					this.enterRoom();
 				}
 		}
-		this.enterRoom();
 	}
 	
 	this.moveGuard = function(){
-		console.log("Moving Guard");
 		for(i=0; i < this.guardSize; i++){
 			this.guard[i].move();
+			this.fightGuard(this.guard[i].positionx, this.guard[i].positiony);
 		}
 	}
-	
+
+	this.checkGuard = function(x,y){
+		for(i=0; i < this.guardSize; i++){
+			console.log("Enemy: " + this.guard[i].positionx + ", " + this.guard[i].positiony);
+			console.log("Player: " + x + ", " + y);
+			if(this.guard[i].positionx == x && this.guard[i].positiony == y){
+				this.gameWorld.resetWorld();
+				this.startPlayer(this.StartY, this.StartX);
+			}
+		}
+	}
+
 	this.startPlayer = function(x,y){
 		this.player.setPosition(y,x);
+		this.gameWorld.room[this.player.positiony][this.player.positionx].value = true;
+		this.StartX = y;
+		this.StartY = x;
+
 	}
 	
 	this.Finish = function(){
 		return this.gameWorld.room[this.player.positiony][this.player.positionx].hasSafe;
 	}
 	
+	this.clearGuard = function(){
+		this.guardSize = 0;
+		this.guard = [];
+	}
+
+	this.fightGuard = function(x,y){
+		if(this.player.positionx == x && this.player.positiony == y){
+			this.gameWorld.resetWorld();
+			this.startPlayer(this.StartY, this.StartX);
+		}
+	}
 	this.interactPlayer = function(){
 
 	}
@@ -353,14 +404,12 @@ function Guard(){
 		this.nextPositiony.push(y);
 		this.positionx = x;
 		this.positiony = y;
-		console.log(this.positionx + "," + this.positiony);
 	}
 	this.move = function(){
 		var x = this.nextPositionx.shift();
 		var y = this.nextPositiony.shift();
 		this.positionx = x;
 		this.positiony = y;
-		console.log(y + ", " + x);
 		this.addDestination(y,x);
 	}
 	this.addDestination = function(y,x){
@@ -372,7 +421,12 @@ function Guard(){
 	this.draw = function(){
 		ctx.fillStyle = "#f55";
 		ctx.fillRect((this.positionx*50)+140, (this.positiony*50)+15, this.scale, this.scale);
-		console.log("draw = " + this.positiony + ", " + this.positionx);
+	}
+	this.checkPosition = function(x,y){
+		if(x == this.positionx && y == this.positiony){
+			return true;
+		}
+		return false;
 	}
 }
 //---------------------------------------INPUTS-----------------------------------------------
@@ -388,29 +442,24 @@ document.onkeydown = function(event){
 		case 65:
 		case 37:
 			moveLeft = true;
-			console.log("Left");
 			break;	
 		//up
 		case 87:
 		case 38:
 			moveUp = true;
-			console.log("Up");
 			break;
 		//right
 		case 68:
 		case 39:
 			moveRight = true;
-			console.log("Right");
 			break;
 		//down
 		case 83:
 		case 40: 
 			moveDown = true;
-			console.log("Down");
 			break;
 		case 32:
 			interaction = true;
-			console.log("Interaction");
 			break;
 	}
 }
@@ -460,7 +509,7 @@ function LevelDesign(){
 	Level0.placeRoom(5,1,"right");
 	Level0.placeRoom(5,2,"right");
 	Level0.placeRoom(5,3,"down");
-	Level0.placeSafe(0,1); // Level0.placeSafe(6,3);
+	Level0.placeSafe(6,3); // Level0.placeSafe(6,3);
 	
 	Level0.addGuard(1,4);
 	Level0.setDestination(0,1,3);
@@ -500,21 +549,34 @@ function LevelDesign(){
 	Level1.placeRoom(5,0,"down");
 	Level1.placeRoom(5,4,"down");
 	Level1.placeRoom(5,2,"down");
+	Level1.clearGuard();
 
-
-
-	Level1.addGuard(1,4);
-	Level1.setDestination(0,1,3);
-	// Level1.setDestination(0,1,2);
-	// Level1.setDestination(0,2,2);
-	// Level1.setDestination(0,3,2);
-	// Level1.setDestination(0,3,3);
-	// Level1.setDestination(0,3,4);
-	// Level1.setDestination(0,2,4);
-
-	Level1.addGuard(3,2);
+	Level1.addGuard(1,1);
+	Level1.setDestination(0,1,0);
+	Level1.setDestination(0,2,0);
+	Level1.setDestination(0,3,0);
 	Level1.setDestination(0,3,1);
+	Level1.setDestination(0,3,2);
+	Level1.setDestination(0,3,3);
+	Level1.setDestination(0,3,4);
+	Level1.setDestination(0,2,4);
+	Level1.setDestination(0,1,4);
+	Level1.setDestination(0,1,3);
+	Level1.setDestination(0,1,2);
 
+	Level1.addGuard(3,3);
+	Level1.setDestination(1,3,4);
+	Level1.setDestination(1,2,4);
+	Level1.setDestination(1,1,4);
+	Level1.setDestination(1,1,3);
+	Level1.setDestination(1,1,2);
+	Level1.setDestination(1,1,1);
+	Level1.setDestination(1,1,0);
+	Level1.setDestination(1,2,0);
+	Level1.setDestination(1,3,0);
+	Level1.setDestination(1,3,1);
+	Level1.setDestination(1,3,2);
+	Level1.placeSafe(6,2);
 
 }
 
@@ -562,13 +624,14 @@ function Update(){
 			if(Level0.Finish()){
 				levelctr++;
 			}
+			Level1.fightGuard();
 			break;
 		case 1:
 			Level1.updateLevel();
 			Level1.draw();
+			Level1.fightGuard();
 			break;
 	}
-	console.log(Level0.player.positiony + "," + Level0.player.positionx);
 	Counter -= Speed;
 }
 //setInterval - loops a function update for every 40 ms
