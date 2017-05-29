@@ -197,6 +197,7 @@ function Tile(tile_x, tile_y){
 		this.hasSafe = true;
 	}
 }
+
 function Person(){
 	this.canMove = true;
 	this.scale = 10; //the scale of the player in the canvas
@@ -216,7 +217,7 @@ function Person(){
 }
 
 var mySound;
-mySound = new sound("vgame.mp3");
+mySound = new sound("dd");
 
 function Level(levelnumber){
 	this.value = levelnumber;
@@ -337,6 +338,7 @@ function Level(levelnumber){
 
 	}
 }
+
 function Guard(){
 	this.scale = 20;
 	this.canMove = true;
@@ -510,8 +512,6 @@ function LevelDesign(){
 	// Level1.setDestination(0,3,4);
 	// Level1.setDestination(0,2,4);
 
-	Level1.addGuard(3,2);
-	Level1.setDestination(0,3,1);
 }
 
 
