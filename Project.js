@@ -501,8 +501,6 @@ function LevelDesign(){
 	Level1.placeRoom(5,4,"down");
 	Level1.placeRoom(5,2,"down");
 
-
-
 	Level1.addGuard(1,4);
 	Level1.setDestination(0,1,3);
 	// Level1.setDestination(0,1,2);
@@ -514,8 +512,6 @@ function LevelDesign(){
 
 	Level1.addGuard(3,2);
 	Level1.setDestination(0,3,1);
-
-
 }
 
 
