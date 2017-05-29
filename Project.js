@@ -240,8 +240,21 @@ function Person(){
 var mySound;
 mySound = new sound("vgame.mp3");
 
+//Sample add sprite
 var coinImage = new Image();
 coinImage.src = "images/coin-sprite-animation.png";
+
+function sprite (options) {
+				
+    var that = {};
+					
+    that.context = options.context;
+    that.width = options.width;
+    that.height = options.height;
+    that.image = options.image;
+
+    return that;
+}
 
 function Level(levelnumber){
 	this.value = levelnumber;
