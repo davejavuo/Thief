@@ -226,9 +226,11 @@ function Person(){
 	this.positiony = 0; //the xposition of the person in the 2d array world
 	//draws the person
 	
+	
 	this.draw = function(){
 		ctx.fillStyle = "#206060";
-		ctx.fillRect((this.positionx*50)+145, (this.positiony*50)+20, this.scale, this.scale);
+
+		ctx.drawRect((this.positionx*50)+145, (this.positiony*50)+20, this.scale, this.scale);
 	}
 	
 	this.setPosition = function(x,y){
